@@ -178,6 +178,7 @@ Plot how the percentage absolute mean error varies with N
 Ns = list(range(50, 501, 50))
 
 errors = []
+errors2 = []
 std = []
 for N in Ns:
     simulations = np.random.exponential(1/freeze_rate, (REPEATS, N))
@@ -190,9 +191,11 @@ for N in Ns:
                                 1,
                                 simulations)
     errors.append(100*(np.mean(abs(rates - freeze_rate))/freeze_rate))
+    errors2.append(100*(np.mean((rates-freeze_rate)**2)/freeze_rate))
     std.append((np.std(rates)/np.mean(rates))*errors[-1])
 
 plt.scatter(Ns, errors, zorder=10)
+plt.scatter(Ns, errors2, marker='x')
 plt.errorbar(Ns, errors, std, c='k', fmt='none', capsize=3)
 
 plt.ylabel('Percentage Mean Absolute Error')

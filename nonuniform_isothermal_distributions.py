@@ -52,6 +52,7 @@ MAX_TIME = 3000
 # == DISTRIBUTIONS ==================
 rv_lognorm = lognorm(1.5)
 g_lognorm = lambda A: rv_lognorm.pdf(A*SCALER)
+mean_area = rv_lognorm.mean() / SCALER
 
 LOWER, UPPER = rv_lognorm.ppf(0.001)/SCALER, rv_lognorm.ppf(0.999)/SCALER
 
@@ -63,7 +64,7 @@ g_loguni = lambda A: rv_loguni.pdf(A*SCALER)
 
 # All droplets the same
 p = np.random.random(N)
-uniform_ts = sorted(t_liq(p, A * J_T(T_ISO, B, T_0)))
+uniform_ts = sorted(t_liq(p, mean_area * J_T(T_ISO, B, T_0)))
 
 # log uniform
 loguni_areas = rv_loguni.rvs(N) / SCALER
@@ -81,7 +82,7 @@ lognorm_ts = sorted(t_liq(p, lognorm_areas*J_T(T_ISO, B, T_0)))
 
 # All droplets the same
 t_fit = np.linspace(0, MAX_TIME, 250)
-plt.plot(t_fit, np.exp(-J_T(T_ISO, B, T_0) * A *t_fit), c=tab20[1])
+plt.plot(t_fit, np.exp(-J_T(T_ISO, B, T_0) * mean_area *t_fit), c=tab20[1])
 
 def get_g_t_spline(rv, N=500):
     '''

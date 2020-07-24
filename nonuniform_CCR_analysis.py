@@ -32,7 +32,6 @@ MIN_TEMP = 250
 def J_T(T, B, T_0):
     return np.exp(-B * (T - T_0)) # [s^-1]
 
-
 def P_liq_T(T, area, B, T_0):
     prefactor = area / ALPHA
     J_integral = np.exp(-B*(T_M-T_0))-np.exp(-B*(T-T_0))
@@ -145,7 +144,7 @@ def nonhom_P_liq_t(t, g_spline, B, T_0):
 
 g_spline = get_g_t_spline(rv)
 
-ts = np.linspace(400, 1000)
+ts = np.linspace(450, MAX_TIME)
 Ps = [nonhom_P_liq_t(t, g_spline, B, T_0) for t in ts]
 
 ax.plot(K_to_degC(T_t(ts)), Ps, color=tab20[4], ls='--',
@@ -154,11 +153,14 @@ ax.plot(K_to_degC(T_t(ts)), Ps, color=tab20[4], ls='--',
 ax.legend()
 
 plt.figure()
-plt.plot(K_to_degC(Ts), J_T(Ts, B, T_0), color=tab20[6])
-plt.plot(K_to_degC(Ts), J_T(Ts, *popt), color=tab20[2])
+plt.plot(K_to_degC(Ts), J_T(Ts, B, T_0), color=tab20[6],
+         label='True J$_\\mathrm{het}$')
+plt.plot(K_to_degC(Ts), J_T(Ts, *popt), color=tab20[2],
+         label='Assuming uniform sample J$_\\mathrm{het}$')
 
 plt.yscale('log')
 plt.ylabel('J$_\\mathrm{het}$ (cm$^{-2}$s$^{-1}$)')
 plt.xlabel('Temperature (\u00B0C)')
+plt.legend()
 plt.show()
 # ===================================================
